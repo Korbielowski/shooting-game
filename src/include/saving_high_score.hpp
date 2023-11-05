@@ -1,0 +1,1 @@
+void saving_high_score(int high_score);
