@@ -1,11 +1,7 @@
 #include "include/enemy.hpp"
 
-Enemy::Enemy(int radiusEnemy, float xVelocity, float yVelocity)
+Enemy::Enemy(int radiusEnemy, float xVelocity, float yVelocity) : radiusEnemy(radiusEnemy), xVelocity(xVelocity), yVelocity(yVelocity)
 {
-    this->radiusEnemy = radiusEnemy;
-    this->xVelocity = xVelocity;
-    this->yVelocity = yVelocity;
-
     bufferDamage.loadFromFile("Death6.wav");
     soundDamage.setBuffer(bufferDamage);
 
