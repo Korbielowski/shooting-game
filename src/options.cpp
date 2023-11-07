@@ -1,15 +1,19 @@
+#include <fstream>
+
 #include "button.hpp"
 #include "player.hpp"
 #include "menu.hpp"
 
-void options()
+void options(sf::RenderWindow &window)
 {
     Button buttonEasy("Easy", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 - 110, sf::Color::Magenta);
     Button buttonNormal("Normal", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2, sf::Color::Magenta);
     Button buttonHard("Hard", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 110, sf::Color::Magenta);
-    Button buttonLeave("Powrot do menu", 22, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 220, sf::Color::Magenta);
+    Button buttonLeave("Back to menu", 22, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 220, sf::Color::Magenta);
 
     Player player;
+
+    std::ofstream gameDifficultyFile("gameDifficulty.txt");
 
     while (window.isOpen())
     {
@@ -25,25 +29,27 @@ void options()
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
             {
+                gameDifficultyFile.close();
                 window.clear(sf::Color::Cyan);
-                menu();
+                menu(window);
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonEasy.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                state = 0;
+                gameDifficultyFile << '0';
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonNormal.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                state = 1;
+                gameDifficultyFile << '1';
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonHard.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                state = 2;
+                gameDifficultyFile << '2';
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonLeave.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
+                gameDifficultyFile.close();
                 window.clear(sf::Color::Black);
-                menu();
+                menu(window);
             }
         }
         window.clear(sf::Color::Black);

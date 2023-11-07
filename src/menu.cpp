@@ -1,15 +1,17 @@
-#include "menu.hpp"
+#include "include/menu.hpp"
+#include "include/options.hpp"
+#include "include/gameMode.hpp"
 #include "button.hpp"
 #include "player.hpp"
 
-void menu()
+void menu(sf::RenderWindow &window)
 {
-    Button buttonPlay("Graj", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2, sf::Color::Magenta);
-    Button buttonOptions("Opcje", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 110, sf::Color::Magenta);
-    Button buttonLeave("Wyjdz", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 220, sf::Color::Magenta);
+    Button buttonPlay("Play", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2, sf::Color::Magenta);
+    Button buttonOptions("Options", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 110, sf::Color::Magenta);
+    Button buttonLeave("Exit", 24, sf::VideoMode::getDesktopMode().width / 2, sf::VideoMode::getDesktopMode().height / 2 + 220, sf::Color::Magenta);
     Player player;
 
-    // tło menu
+    // Menu background
     // sf::Texture texture;
     // texture.loadFromFile("tlo.jpg");
     // sf::Sprite sprite(texture);
@@ -29,12 +31,12 @@ void menu()
             if (player.shapePlayer.getGlobalBounds().intersects(buttonPlay.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 window.clear(sf::Color::Black);
-                gameMode();
+                gameMode(window);
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonOptions.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 window.clear(sf::Color::Black);
-                options();
+                options(window);
             }
             if (player.shapePlayer.getGlobalBounds().intersects(buttonLeave.button.getGlobalBounds()) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {

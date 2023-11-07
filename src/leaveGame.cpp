@@ -1,9 +1,13 @@
-#include "include/leave_game.hpp"
+#include <SFML/Audio.hpp>
 
+#include <fstream>
+
+#include "include/leaveGame.hpp"
 #include "include/menu.hpp"
 
-// Funkcja odpowiada za ekran końcowy gry dla trybu Goal Game mode
-void leave_game() {
+// This function is responsible for the ending screen of the Goal Game mode
+void leaveGame(sf::RenderWindow &window)
+{
   sf::Font font;
   font.loadFromFile("arial.ttf");
   sf::Text textEnd;
@@ -11,8 +15,18 @@ void leave_game() {
   textEnd.setCharacterSize(30);
   textEnd.setFillColor(sf::Color::Green);
 
-  if (j == 1) {
-    textEnd.setString("Niestety przegrales :(\nSproboj jeszcze raz");
+  std::ifstream leaveStateFile("leaveState.txt");
+  char leaveState;
+
+  if (leaveStateFile.is_open())
+  {
+    leaveStateFile.get(leaveState);
+    leaveStateFile.close();
+  }
+
+  if (leaveState == '1')
+  {
+    textEnd.setString("Unfortunately You lost :(\nTry again");
     textEnd.setPosition(sf::VideoMode::getDesktopMode().width / 2,
                         sf::VideoMode::getDesktopMode().height / 2);
     sf::SoundBuffer buffer;
@@ -23,8 +37,9 @@ void leave_game() {
     // if(sound.Stopped)
     //     window.close();
   }
-  if (j == 2) {
-    textEnd.setString("Wygrales!!!\nGratulujemy");
+  if (leaveState == '2')
+  {
+    textEnd.setString("You won!!!\nCongratulations");
     textEnd.setPosition(sf::VideoMode::getDesktopMode().width / 2,
                         sf::VideoMode::getDesktopMode().height / 2);
     sf::SoundBuffer buffer;
@@ -36,15 +51,19 @@ void leave_game() {
     //     window.close();
   }
 
-  while (window.isOpen()) {
+  while (window.isOpen())
+  {
     sf::Event event;
 
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
+    while (window.pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+      {
         window.close();
       }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        menu();
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+      {
+        menu(window);
       }
     }
 

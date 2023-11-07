@@ -1,1 +1,0 @@
-void leave_game();

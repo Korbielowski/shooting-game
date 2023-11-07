@@ -1,4 +1,13 @@
-void goalGameMode(int r, int vx, int vy) {
+#include <fstream>
+
+#include "include/goalGameMode.hpp"
+#include "include/player.hpp"
+#include "include/enemy.hpp"
+#include "include/leaveGame.hpp"
+#include "include/menu.hpp"
+
+void goalGameMode(int r, int vx, int vy, sf::RenderWindow &window)
+{
   bool isEnemyKilled = false;
   int randX, randY;
   int points = 10;
@@ -23,14 +32,17 @@ void goalGameMode(int r, int vx, int vy) {
   textPoints.setCharacterSize(30);
   textPoints.setPosition(20, 100);
   textPoints.setFillColor(sf::Color::Green);
-  textPoints.setString("Pozostalo przeciwnikow: " + std::to_string(points));
+  textPoints.setString("Remaining enemies: " + std::to_string(points));
 
   window.setMouseCursorVisible(false);
 
+  std::ofstream leaveStateFile("leaveState.txt");
+
   sf::Clock clock;
 
-  // pętla gry, całość logiki oraz rysowania obrazu
-  while (window.isOpen()) {
+  // Whole game logic and window rendering
+  while (window.isOpen())
+  {
     sf::Event event;
     sf::Time timer = clock.getElapsedTime();
     textTime.setString("Czas (max 10s): " +
@@ -51,13 +63,15 @@ void goalGameMode(int r, int vx, int vy) {
         sf::VideoMode::getDesktopMode().height - 123)
       enemy.yVelocity = 0 - enemy.yVelocity;
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) player.soundPlayer.play();
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+      player.soundPlayer.play();
 
     // dodawanie punktów jeśli gracz dotknie wroga przy użyciu metody
     // intersects()
     if (player.shapePlayer.getGlobalBounds().intersects(
             enemy.shapeEnemy.getGlobalBounds()) &&
-        sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
       enemy.soundDamage.play();
       points--;
       textPoints.setString("Pozostalo przeciwnikow: " + std::to_string(points));
@@ -67,26 +81,34 @@ void goalGameMode(int r, int vx, int vy) {
       enemy.yVelocity = (rand() % vy * 2) - vy;
     }
 
-    if (points == 0 && 10 - timer.asSeconds() >= 0) {
-      j = 2;
+    if (points == 0 && 10 - timer.asSeconds() >= 0)
+    {
+      leaveStateFile << '2';
+      leaveStateFile.close();
       window.clear(sf::Color::Black);
-      leaveGame();
-    } else if (10 - timer.asSeconds() < 0) {
-      j = 1;
-      leaveGame();
+      leaveGame(window);
+    }
+    else if (10 - timer.asSeconds() < 0)
+    {
+      leaveStateFile << '1';
+      leaveStateFile.close();
+      leaveGame(window);
     }
 
     // poruszanie wroga
     enemy.shapeEnemy.move(enemy.xVelocity, enemy.yVelocity);
 
     // poruszanie się graczem oraz zamykanie okna
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
+    while (window.pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+      {
         window.close();
       }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+      {
         window.clear(sf::Color::Cyan);
-        menu();
+        menu(window);
       }
     }
 

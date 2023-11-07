@@ -4,27 +4,20 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 
-void menu();
-void options();
-void gameMode();
-void leaveGame();
-void infiniteGameMode();
-void savingHighScore(int highScore);
-void goalGameMode(int r, int vx, int vy);
+#include "include/menu.hpp"
 
-sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width,
-                                      sf::VideoMode::getDesktopMode().height),
-                        "Shoot The Circle");
-int state = 1;
-int j = 0;
+// Start of the program
+int main()
+{
 
-// Start programu
-int main() {
+  sf::RenderWindow window(sf::VideoMode(sf::VideoMode::getDesktopMode().width,
+                                        sf::VideoMode::getDesktopMode().height),
+                          "Shoot The Circle");
   window.setMouseCursorVisible(false);
   window.setFramerateLimit(60);
   window.setVerticalSyncEnabled(true);
 
-  menu();
+  menu(window);
 
   return 0;
 }

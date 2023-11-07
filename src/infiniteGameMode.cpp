@@ -1,14 +1,14 @@
-#include "include/infinite_game_mode.hpp"
 
 #include <fstream>
-#include <iostream>
 
+#include "include/infiniteGameMode.hpp"
 #include "include/enemy.hpp"
 #include "include/menu.hpp"
 #include "include/player.hpp"
-#include "include/saving_high_score.hpp"
+#include "include/savingHighScore.hpp"
 
-void infitnite_game_mode() {
+void infiniteGameMode(sf::RenderWindow &window)
+{
   int points = 0;
   int highScore;
   bool isEnemyCreated = false;
@@ -29,13 +29,16 @@ void infitnite_game_mode() {
   textPoints.setFont(font);
   textPoints.setCharacterSize(24);
   textPoints.setFillColor(sf::Color::Green);
-  textPoints.setString("Punkty: " + std::to_string(points));
+  textPoints.setString("Points: " + std::to_string(points));
   textPoints.setPosition(10, 50);
 
   std::ifstream loadHighScore("highScore.txt");
-  if (loadHighScore.good()) {
+  if (loadHighScore.good())
+  {
     loadHighScore >> highScore;
-  } else {
+  }
+  else
+  {
     highScore = 0;
   }
   loadHighScore.close();
@@ -47,14 +50,15 @@ void infitnite_game_mode() {
   textHighScore.setString("High score: " + std::to_string(highScore));
   textHighScore.setPosition(10, 0);
 
-  // pętla gry, całość logiki oraz rysowania obrazu
-  while (window.isOpen()) {
+  // Whole of game logic and rendering
+  while (window.isOpen())
+  {
     sf::Event event;
 
     player.shapePlayer.setPosition(sf::Mouse::getPosition().x,
                                    sf::Mouse::getPosition().y);
 
-    // odbijanie wroga od krawędzi ekranu
+    // Enemy bouncing of the window edges logic
     if (enemy.shapeEnemy.getPosition().x - enemy.radiusEnemy <= 0.f)
       enemy.xVelocity = 0 - enemy.xVelocity;
     if (enemy.shapeEnemy.getPosition().y - enemy.radiusEnemy <= 0.f - 80)
@@ -66,13 +70,14 @@ void infitnite_game_mode() {
         sf::VideoMode::getDesktopMode().height - 123)
       enemy.yVelocity = 0 - enemy.yVelocity;
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) player.soundPlayer.play();
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+      player.soundPlayer.play();
 
-    // dodawanie punktów jeśli gracz dotknie wroga przy użyciu metody
-    // intersects()
+    // Giving points to the player when enemy is clicked at, used method: intersects()
     if (player.shapePlayer.getGlobalBounds().intersects(
             enemy.shapeEnemy.getGlobalBounds()) &&
-        sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
       enemy.soundDamage.play();
       velX = (rand() % 12) - 6;
       velY = (rand() % 12) - 6;
@@ -81,9 +86,11 @@ void infitnite_game_mode() {
       enemy.xVelocity = velX;
       enemy.yVelocity = velY;
 
-      if (isPointGiven == false) {
+      if (isPointGiven == false)
+      {
         points++;
-        if (points > highScore) {
+        if (points > highScore)
+        {
           highScore = points;
           textHighScore.setString("High score: " + std::to_string(highScore));
         }
@@ -91,26 +98,30 @@ void infitnite_game_mode() {
         textPoints.setString("Punkty: " + std::to_string(points));
         isPointGiven = true;
       }
-    } else {
+    }
+    else
+    {
       isPointGiven = false;
     }
 
-    // poruszanie wroga
+    // Enemy movement
     enemy.shapeEnemy.move(enemy.xVelocity, enemy.yVelocity);
 
-    // poruszanie się graczem oraz zamykanie okna
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
+    // Player movement and window closing
+    while (window.pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+      {
         saving_high_score(highScore);
         window.close();
       }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+      {
         saving_high_score(highScore);
-        menu();
+        menu(window);
       }
     }
 
-    // rysowanie gracza, wroga, punktów, High score oraz tła
     window.clear(sf::Color::Black);
 
     window.draw(enemy.shapeEnemy);

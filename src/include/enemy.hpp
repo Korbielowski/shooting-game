@@ -1,12 +1,14 @@
-#pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
-class Enemy {
- public:
+class Enemy
+{
+public:
   int radiusEnemy;
   float xVelocity, yVelocity;
   sf::CircleShape shapeEnemy;
   sf::Sprite spriteEnemy;
-  // dżwięk obrażeń
+  // Damage sound
   sf::SoundBuffer bufferDamage;
   sf::Sound soundDamage;
 
